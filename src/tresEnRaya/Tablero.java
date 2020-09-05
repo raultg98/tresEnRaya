@@ -1,5 +1,7 @@
 package tresEnRaya;
 
+import java.util.Random;
+
 public class Tablero {
 	/*****    CONSTANTES    *****/
 	public final static char FICHA_JUGADOR = 79; // O
@@ -18,10 +20,18 @@ public class Tablero {
 	}
 	
 	/*****    SETTER / GETTERS / ADD    *****/  
+	/**
+	 * Método que me devulve si hay un ganador o no.
+	 * @return TRUE en caso de existir un ganador. FALSE, en caso contrario.
+	 */
 	public boolean getGanador(){
 		return this.ganador;
 	}
 	
+	/**
+	 * Método que me devuelve las fichas que tengo colocadas.
+	 * @return INT, número de fichas colocadas.
+	 */
 	public int getColocadas() {
 		return this.colocadas;
 	}
@@ -39,17 +49,16 @@ public class Tablero {
 		if(existeHueco(fila, columna)) {
 			// Colocamos la ficha.
 			tablero[fila][columna] = ficha;
+			colocadas++;
 			// Comprobamos si ya hay ganador.
 			if(hayGanador(fila, columna, ficha)) {
 				this.ganador = true;
-				
 			}
-			
-		}// ARRIBA ESPAÑA BRO
+		}
 
 	}
 	
-	/*****    MÉTODOS    *****/
+	/*****    MÉTODOS    *****/	
 	/* Método que me comprueba si al poner una ficha tenemos un ganador o no.
 	 * @param fila, fila en la que se ha colocado la ultima ficha.
 	 * @param columna, columna en la que se ha colocado la ultima ficha.
@@ -74,6 +83,13 @@ public class Tablero {
 		return ganador;
 	}
 	
+	/**
+	 * Método que me comprueba si con la última ficha que coloque he ganado verticalmente.
+	 * @param fila, fila en la que he colocado la última ficha.
+	 * @param columna, columna en la que he colocado la última columna.
+	 * @param ficha, última ficha que he colocado.
+	 * @return TRUE en caso de hacer la linea. FALSE, en caso contrario.
+	 */
 	public boolean comprobarVertical(int fila, int columna, char ficha) {
 		boolean encontrado = true;
 		int i = fila-2;
@@ -96,6 +112,13 @@ public class Tablero {
 		return encontrado;
 	}
 	
+	/**
+	 * Método que me comprueba si con la última ficha que coloque he ganado Horizontalmente.
+	 * @param fila, fila en la que he colocado la última ficha.
+	 * @param columna, columna en la que he colocado la última columna.
+	 * @param ficha, última ficha que he colocado.
+	 * @return TRUE en caso de hacer la linea. FALSE, en caso contrario.
+	 */
 	public boolean comprobarHorizontal(int fila, int columna, char ficha) {
 		boolean encontrado = true;
 		int contador = 0;
@@ -117,6 +140,13 @@ public class Tablero {
 		return encontrado;
 	}
 	
+	/**
+	 * Método que me comprueba si con la última ficha que coloque he ganado en la diagonal principal.
+	 * @param fila, fila en la que he colocado la última ficha.
+	 * @param columna, columna en la que he colocado la última columna.
+	 * @param ficha, última ficha que he colocado.
+	 * @return TRUE en caso de hacer la linea. FALSE, en caso contrario.
+	 */
 	public boolean comprobarDiagonalPrin(int fila, int columna, char ficha) {
 		boolean encontrado = true;
 		int contador = 0;
@@ -143,6 +173,13 @@ public class Tablero {
 		return encontrado;
 	}
 	
+	/**
+	 * Método que me comprueba si con la última ficha que coloque he ganado en la diagonal secundaria.
+	 * @param fila, fila en la que he colocado la última ficha.
+	 * @param columna, columna en la que he colocado la última columna.
+	 * @param ficha, última ficha que he colocado.
+	 * @return TRUE en caso de hacer la linea. FALSE, en caso contrario.
+	 */
 	public boolean comprobarDiagonalSec(int fila, int columna, char ficha) {
 		boolean encontrado = true;
 		int contador = 0;
@@ -180,14 +217,25 @@ public class Tablero {
 		}else return true;
 	}
 	
+	/**
+	 * Método que me imprime el tablero.
+	 */
 	public void imprimirTablero() {
-		for(int i=0; i<tablero.length; i++) {
-			System.out.print("| ");
-			for(int j=0; j<tablero.length; j++) {
-				if(tablero[i][j] == 0) {
-					System.out.print("*" +" | ");
-				}else System.out.print(tablero[i][j] +" | ");
+		for(int i=-1; i<tablero.length; i++) {
+			if(i != -1) {
+				System.out.print(i);
+				System.out.print("| ");
+			}else {
 				
+			}
+			for(int j=0; j<tablero.length; j++) {
+				 if(i == -1) {
+					 System.out.print("   "+j);
+				 }else {
+					 if(tablero[i][j] == 0) {
+						 System.out.print("*" +" | ");
+					 }else System.out.print(tablero[i][j] +" | ");
+				 }
 			}
 			System.out.println();
 		}
@@ -195,9 +243,33 @@ public class Tablero {
 	}
 	
 	/*****    MÉTODOS DE VALIDACIÓN    *****/   
+	/**
+	 * Método mediante el cual compruebo si las posiciones que se le he pasado son correctas o no.
+	 * @param fila, fila que se desea comprobar si esta dentro del tablero.
+	 * @param columna, columna que se desea comprobar si esta dentro del tablero.
+	 * @return TRUE, en caso de que la posicion sea valida. FALSE, en caso contrario.
+	 */
 	public boolean comprobarPosicion(int fila, int columna) {
 		if((fila >= 0 && fila <= 2)&&(columna >= 0 && columna <= 2)) {
 			return true;
 		}else return false;
 	}
+	
+	/*****    INTERACIÓN MÁQUINA    *****/
+	/**
+	 * Método con el que consigo simular las acciones de un jugador, es decir, hago de IA del ordenador.
+	 */
+	public void jugarMaquina() {
+		Random r = new Random();
+		
+		int fila, columna;
+		
+		do {
+			fila = r.nextInt(3);
+			columna = r.nextInt(3);
+		}while(!existeHueco(fila, columna));
+		
+		colocarFicha(fila, columna, FICHA_MAQUINA);
+	}
+	
 }
