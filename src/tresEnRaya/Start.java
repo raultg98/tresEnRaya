@@ -34,17 +34,23 @@ public class Start {
 			// TURNO JUGADOR.
 			if(turno == Tablero.FICHA_JUGADOR) {
 				// PEDIR LA POSICION
+				int contador = 0;
 				do {
+					if(contador != 0) {
+						System.out.println("Introduce la posición correctamente");
+					}
 					System.out.println("Introduzca la fila (0-2): ");
 					fila = sc.nextInt();
 					System.out.println("Introduzca la columna (0-2): ");
 					columna = sc.nextInt();
-				}while(!tablero.validacionPosicion(fila, columna) && !tablero.existeHueco(fila, columna));
+					contador++;
+				}while(!tablero.comprobarPosicion(fila, columna) || !tablero.existeHueco(fila, columna));
 				
 				// COLOCAR LA FICHA
 					tablero.colocarFicha(fila, columna, turno);
 				// CAMBIAR TURNO
 				turno = Tablero.FICHA_MAQUINA;
+				contador = 0;
 			}
 			// TURNO DE LA MÁQUINA.
 			else {
@@ -52,7 +58,7 @@ public class Start {
 				do {
 					fila = r.nextInt(3);
 					columna = r.nextInt(3);
-				}while(!tablero.validacionPosicion(fila, columna) && !tablero.existeHueco(fila, columna));
+				}while(!tablero.comprobarPosicion(fila, columna) || !tablero.existeHueco(fila, columna));
 				
 				// COLOCAR LA FICHA
 				tablero.colocarFicha(fila, columna, turno);
@@ -60,15 +66,18 @@ public class Start {
 				// CAMBIAR TURNO
 				turno = Tablero.FICHA_JUGADOR;
 				
+				fila = -1;
+				columna = -1;
+				
 			}
 			tablero.imprimirTablero();
 		}
 		
 		if(tablero.getGanador()) {
 			if(turno == Tablero.FICHA_MAQUINA) {
-				System.out.println("Ha ganado el jugador, la maquina ha perdido");
-			}else System.out.println("Ha ganado la Maquina");
-		}else System.out.println("La partida ha terminado en tablas");
+				System.out.println("Ha ganado el JUGADOR");
+			}else System.out.println("Ha ganado la MÁQUINA");
+		}else System.out.println("La partida ha terminado en EMPATE");
 	}
 }
 

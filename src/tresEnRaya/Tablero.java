@@ -74,112 +74,98 @@ public class Tablero {
 		return ganador;
 	}
 	
-	public boolean comprobarHorizontal(int fila, int columna, char ficha) {
-		boolean encontrado = false;
-		int contadorSeguidos = 0;
-		int i=fila-2;
+	public boolean comprobarVertical(int fila, int columna, char ficha) {
+		boolean encontrado = true;
+		int i = fila-2;
+		int contador = 0;
 		
-		// Recorremos el tablero de forma horizontal.
-		while(!encontrado && i <= fila+2 && contadorSeguidos < 3) {
-			// Tenemos que comprobar de que la posicion sea valida.
-			if(i >= 0 && i <=2) {
-				// Tenemos que comprobar si se corresponde con la ficha indicada
-				if(tablero[i][columna] == ficha) {
-					// En caso de coincidir incrementamos el contador.
-					contadorSeguidos++;
-				}else 
-					// En caso contrario ponemos el contador a 0
-					contadorSeguidos = 0;
+		while(encontrado && i<=fila+2 && contador < 3) {
+			if(comprobarPosicion(i, columna)) {
+				if(tablero[i][columna] != ficha) {
+					encontrado = false;
+				}else contador++;
+				
 			}
 			i++;
 		}
 		
-		if(contadorSeguidos == 3) {
-			encontrado = true;
+		if(contador != 3) {
+			encontrado = false;
 		}
-
+		
 		return encontrado;
 	}
-	public boolean comprobarVertical(int fila, int columna, char ficha) {
-		boolean encontrado = false;
-		int contadorSeguidos = 0;
-		int j=columna-2;
+	
+	public boolean comprobarHorizontal(int fila, int columna, char ficha) {
+		boolean encontrado = true;
+		int contador = 0;
+		int j = columna-2;
 		
-		// Recorremos el tablero de forma horizontal.
-		while(!encontrado && j <= columna+2 && contadorSeguidos < 3) {
-			// Tenemos que comprobar de que la posicion sea valida.
-			if(j >= 0 && j <=2) {
-				// Tenemos que comprobar si se corresponde con la ficha indicada
-				if(tablero[fila][j] == ficha) {
-					// En caso de coincidir incrementamos el contador.
-					contadorSeguidos++;
-				}else 
-					// En caso contrario ponemos el contador a 0
-					contadorSeguidos = 0;
+		while(encontrado && j<=columna+2 && contador < 3) {
+			if(comprobarPosicion(fila, j)) {
+				if(tablero[fila][j] != ficha) {
+					encontrado = false;
+				}else contador++;
 			}
 			j++;
 		}
 		
-		if(contadorSeguidos == 3) {
-			encontrado = true;
+		if(contador != 3) {
+			encontrado = false;
 		}
-
+		
 		return encontrado;
 	}
 	
 	public boolean comprobarDiagonalPrin(int fila, int columna, char ficha) {
-		boolean encontrado = false;
-		int contadorSeguidos = 0;
+		boolean encontrado = true;
+		int contador = 0;
 		
 		int i = fila-2;
 		int j = columna-2;
 		
-		// Recorremos el tablero de forma horizontal.
-		while(!encontrado && i <= fila+2 && j<= columna+2 && contadorSeguidos < 3) {
-			// Tenemos que comprobar que la posicion sea valida
-			if((i >= 0 && i <= 2)&&(j >= 0 && j <= 2)) {
-				// Tenemos que comprobar si se corresponde con la ficha indicada
-				if(tablero[i][j] == ficha) {
-					//En caso de coincidir incrementamos el contador.
-					contadorSeguidos++;
-				}else contadorSeguidos = 0;
+		while(encontrado && i<=fila+2 && j<=columna+2 && contador < 3) {
+		
+			if(comprobarPosicion(i, j)) {
+				if(tablero[i][j] != ficha) {
+					encontrado = false;
+				}else contador++;
 			}
-			i++; j++;
+			
+			i++; 
+			j++;
 		}
 		
-		if(contadorSeguidos == 3) {
-			encontrado = true;
+		if(contador != 3) {
+			encontrado = false;
 		}
-
+		
 		return encontrado;
 	}
 	
 	public boolean comprobarDiagonalSec(int fila, int columna, char ficha) {
-		boolean encontrado = false;
-		int contadorSeguidos = 0;
+		boolean encontrado = true;
+		int contador = 0;
 		
 		int i = fila-2;
-		int j = columna-2;
-		
-		// Recorremos el tablero de forma horizontal.
-		while(!encontrado && i <= fila+2 && j<= columna-2 && contadorSeguidos < 3) {
-			// Tenemos que comprobar que la posicion sea valida
-			if((i >= 0 && i <= 2)&&(j >= 0 && j <= 2)) {
-				// Tenemos que comprobar si se corresponde con la ficha indicada
-				if(tablero[i][j] == ficha) {
-					//En caso de coincidir incrementamos el contador.
-					contadorSeguidos++;
-				}else contadorSeguidos = 0;
-			}
-			i++; j++;
-		}
-		
-		if(contadorSeguidos == 3) {
-			encontrado = true;
-		}
+		int j = columna+2;
 
-		return encontrado;
+		while(encontrado && i<=fila+2 && j>=columna-2 && contador < 3) {
+			if(comprobarPosicion(i, j)) {
+				if(tablero[i][j] != ficha) {
+					encontrado = false;
+				}else contador++;
+			}
+			
+			i++; 
+			j--;
+		}
 		
+		if(contador < 3) {
+			encontrado = false;
+		}
+		
+		return encontrado;
 	}
 	
 	/**
@@ -189,9 +175,9 @@ public class Tablero {
 	 * @return TRUE en casao de existir hueco. FALSE en caso contrario.
 	 */
 	boolean existeHueco(int i, int j) {
-		if(tablero[i][j] == 0) {
-			return true;
-		}else return false;
+		if(tablero[i][j] != 0) {
+			return false;
+		}else return true;
 	}
 	
 	public void imprimirTablero() {
@@ -209,7 +195,7 @@ public class Tablero {
 	}
 	
 	/*****    MÉTODOS DE VALIDACIÓN    *****/   
-	public boolean validacionPosicion(int fila, int columna) {
+	public boolean comprobarPosicion(int fila, int columna) {
 		if((fila >= 0 && fila <= 2)&&(columna >= 0 && columna <= 2)) {
 			return true;
 		}else return false;
